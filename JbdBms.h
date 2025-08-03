@@ -11,7 +11,7 @@
 #include "Arduino.h"
 #include <SoftwareSerial.h>
 
-#define BMS_LEN_RESPONCE 42
+#define BMS_LEN_RESPONSE 42
 /* \defgroup BMS_STATUS BMS protection status masks
 *  @{
 */
@@ -26,7 +26,7 @@
 #define BMS_STATUS_DSG_UTP      128   ///< Power off
 #define BMS_STATUS_CHG_OCP      256
 #define BMS_STATUS_DSG_OCP      512   ///< Power off
-#define BMS_STATUS_SHORT_CIRCOUT  1024  ///< Power off
+#define BMS_STATUS_SHORT_CIRCUIT  1024  ///< Power off
 #define BMS_STATUS_AFE_ERROR    2048
 #define BMS_STATUS_SOFT_LOCK    4096
 #define BMS_STATUS_CHGOVERTIME    8192
@@ -49,7 +49,7 @@ typedef struct packCellInfoStruct{
  * \brief Class for working with BMS, which are compatible with the program
  * JBDTOOLS
  *
- * \ warning Adout JBD: maximum frequency (min time) data: 22.7 Hz(43.87 ms).
+ * \ warning About JBD: maximum frequency (min time) data: 22.7 Hz(43.87 ms).
  * There are brakes due to the work of the BMS itself (she didn’t put a trip
  * to DMA UART communication.
  * Probability is that the update data in the BMS itself
@@ -94,9 +94,9 @@ private:
   void sendCellMessage();
   void parseReqPackMessage(uint8_t * t_message);
 
-  bool readResponce(uint8_t * t_outMessage);
+  bool readResponse(uint8_t * t_outMessage);
 
-  bool checkCheckSumRecieve(uint8_t * t_message);
+  bool checkCheckSumReceive(uint8_t * t_message);
   uint16_t computeCrc16JbdChina(uint8_t * puchMsg, uint8_t usDataLen);
   float converUint32ToFloat(uint32_t number);
   uint16_t convertTwoIntsToUint16(int highbyte, int lowbyte);

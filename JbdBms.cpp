@@ -33,13 +33,13 @@ JbdBms::JbdBms(int rx, int tx){
  * \retval status of reading
  */
 bool JbdBms::readBmsData(){
-  uint8_t responce[BMS_LEN_RESPONCE];
+  uint8_t response[BMS_LEN_RESPONSE];
 
   sendReqBasicMessage();
-  readResponce(responce);
+  readResponse(response);
 
-  if (checkCheckSumRecieve(responce) == true) {
-    parseReqBasicMessage(responce);
+  if (checkCheckSumReceive(response) == true) {
+    parseReqBasicMessage(response);
   } else {
     return false;
   }
@@ -50,13 +50,13 @@ bool JbdBms::readBmsData(){
  * \retval status of reading
  */
 bool JbdBms::readPackData(){
-  uint8_t responce[BMS_LEN_RESPONCE];
+  uint8_t response[BMS_LEN_RESPONSE];
 
   sendCellMessage();
-  readResponce(responce);
+  readResponse(response);
 
-  if (checkCheckSumRecieve(responce) == true) {
-    parseReqPackMessage(responce);
+  if (checkCheckSumReceive(response) == true) {
+    parseReqPackMessage(response);
   } else {
     return false;
   }
@@ -155,15 +155,15 @@ void JbdBms::parseReqPackMessage(uint8_t * t_message){ //packCellInfoStruct * t_
   }
 }
 
-bool JbdBms::readResponce(uint8_t *t_outMessage)
+bool JbdBms::readResponse(uint8_t *t_outMessage)
 {
   uint8_t i = 0;
   bool findBeginByte = false;
-  uint32_t statrTime = millis();
+  uint32_t startTime = millis();
   uint8_t thisByte;
-  while (i <= BMS_LEN_RESPONCE - 1)
+  while (i <= BMS_LEN_RESPONSE - 1)
   {
-    if (abs((millis() - statrTime) > getMaxTimeout()))
+    if (abs((millis() - startTime) > getMaxTimeout()))
     {
       return false;
     }
@@ -180,20 +180,20 @@ bool JbdBms::readResponce(uint8_t *t_outMessage)
         t_outMessage[i] = thisByte;
         i++;
       }
-      statrTime = millis();
+      startTime = millis();
     }
   }
   return true;
 }
 
 /**
- * \brief Compute and cheking check sum in message
+ * \brief Compute and checking check sum in message
  * \param [in] t_message
  * \return Fact of passing the test:
  *  true - check passed;
  *  false - check not passed
  */
-bool JbdBms::checkCheckSumRecieve(uint8_t *t_message)
+bool JbdBms::checkCheckSumReceive(uint8_t *t_message)
 {
 
   uint16_t checkSumCompute;
@@ -206,7 +206,7 @@ bool JbdBms::checkCheckSumRecieve(uint8_t *t_message)
     return false;
 
   lengthData = t_message[3];
-  checkSumCompute = computeCrc16JbdChina(t_message, BMS_LEN_RESPONCE);
+  checkSumCompute = computeCrc16JbdChina(t_message, BMS_LEN_RESPONSE);
   startIndexCS = lengthData + 4;
 
   checkSumAccepted = (t_message[startIndexCS] << 8) | t_message[startIndexCS + 1];
